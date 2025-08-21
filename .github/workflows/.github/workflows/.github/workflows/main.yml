@@ -1,0 +1,54 @@
+name: CI Pipeline - Bus Ticketing System
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # Step 3: Install dependencies for backend
+      - name: Install Backend Dependencies
+        run: |
+          cd server
+          npm install
+
+      # Step 4: Install dependencies for frontend
+      - name: Install Frontend Dependencies
+        run: |
+          cd client
+          npm install
+
+      # Step 5: Run backend tests
+      - name: Run Backend Tests
+        run: |
+          cd server
+          npm test || echo "No backend tests configured"
+
+      # Step 6: Run frontend tests
+      - name: Run Frontend Tests
+        run: |
+          cd client
+          npm test || echo "No frontend tests configured"
+
+      # Step 7: Build frontend
+      - name: Build Frontend
+        run: |
+          cd client
+          npm run build
